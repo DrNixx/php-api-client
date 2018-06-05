@@ -80,3 +80,5 @@ cli.php
 coverage.clover
 apigen/
 coverage/
+
+/live-tests
