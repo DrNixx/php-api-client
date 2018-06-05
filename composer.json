@@ -1,5 +1,5 @@
 {
-  "name": "rutube/php-api-client",
+  "name": "drnixx/php-rutube-client",
   "keywords": [
     "rutube",
     "sdk",
@@ -13,9 +13,9 @@
       "name": "Rutube Team"
     }
   ],
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "require": {
-    "php": ">=5.3.3",
+    "php": ">=5.6",
     "nategood/httpful": "0.2.19"
   },
   "require-dev": {

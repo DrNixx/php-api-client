@@ -1,14 +1,12 @@
 <?php
-
 /*
  * This file is part of the Rutube PHP API Client package.
  *
- * (c) Rutube
+ * (c) Rutube & Friday
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Rutube;
 
 /**
@@ -23,7 +21,10 @@ class Search extends Entity
      *
      * @param int $page Страница
      * @param int $limit Кол-во результатов на странице
+     *
      * @return mixed
+     *
+     * @throws Exceptions\ConnectionErrorException
      */
     public function loadVideoPerson($page = 1, $limit = 20)
     {
@@ -36,7 +37,10 @@ class Search extends Entity
      * @param int $id ID пользователя
      * @param int $page Страница
      * @param int $limit Кол-во результатов на странице
+     *
      * @return mixed
+     *
+     * @throws Exceptions\ConnectionErrorException
      */
     public function loadVideoPersonById($id, $page = 1, $limit = 20)
     {
@@ -48,7 +52,10 @@ class Search extends Entity
      *
      * @param int $page Страница
      * @param int $limit Кол-во результатов на странице
+     *
      * @return mixed
+     *
+     * @throws Exceptions\ConnectionErrorException
      */
     public function loadTags($page = 1, $limit = 20)
     {
@@ -61,7 +68,10 @@ class Search extends Entity
      * @param int $id ID тега
      * @param int $page Страница
      * @param int $limit Кол-во результатов на странице
+     *
      * @return mixed
+     *
+     * @throws Exceptions\ConnectionErrorException
      */
     public function loadVideoTags($id, $page = 1, $limit = 20)
     {
@@ -73,7 +83,10 @@ class Search extends Entity
      *
      * @param int $page Страница
      * @param int $limit Кол-во результатов на странице
+     *
      * @return mixed
+     *
+     * @throws Exceptions\ConnectionErrorException
      */
     public function loadTv($page = 1, $limit = 20)
     {
@@ -84,7 +97,10 @@ class Search extends Entity
      * Получение списка возможных типов контента для ТВ-шоу
      *
      * @param string $id ID ТВ-шоу
+     *
      * @return mixed
+     *
+     * @throws Exceptions\ConnectionErrorException
      */
     public function loadTvTypes($id)
     {
@@ -95,7 +111,10 @@ class Search extends Entity
      * Получение списка сезонов для указанного ТВ-шоу
      *
      * @param string $id ID ТВ-шоу
+     *
      * @return mixed
+     *
+     * @throws Exceptions\ConnectionErrorException
      */
     public function loadTvSeasons($id)
     {
@@ -108,7 +127,10 @@ class Search extends Entity
      * @param string $id ID ТВ-шоу
      * @param int $page Страница
      * @param int $limit Кол-во результатов на странице
+     *
      * @return mixed
+     *
+     * @throws Exceptions\ConnectionErrorException
      */
     public function loadTvVideos($id, $page = 1, $limit = 20)
     {
@@ -121,7 +143,10 @@ class Search extends Entity
      * @param string $id ID ТВ-шоу
      * @param int $page Страница
      * @param int $limit Кол-во результатов на странице
+     *
      * @return mixed
+     *
+     * @throws Exceptions\ConnectionErrorException
      */
     public function loadTvLastSeasonVideos($id, $page = 1, $limit = 20)
     {
@@ -132,7 +157,10 @@ class Search extends Entity
      * Получение информации о связях видео с ТВ-шоу
      *
      * @param string $id ID эпизода
+     *
      * @return mixed
+     *
+     * @throws Exceptions\ConnectionErrorException
      */
     public function loadTvVideoRelations($id)
     {

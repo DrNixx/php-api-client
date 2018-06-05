@@ -21,18 +21,26 @@ class DefaultTransport extends Transport
     /**
      * @param string $username
      * @param string $password
+     *
      * @return $this
+     *
+     * @throws \Rutube\Exceptions\BadRequestException
      * @throws \Rutube\Exceptions\ConnectionErrorException
+     * @throws \Rutube\Exceptions\ForbiddenException
+     * @throws \Rutube\Exceptions\MethodNotAllowedException
+     * @throws \Rutube\Exceptions\NotFoundException
+     * @throws \Rutube\Exceptions\ServerErrorException
+     * @throws \Rutube\Exceptions\UnauthorizedException
      */
     public function authorize($username, $password)
     {
         $response = $this->call(
             'POST',
             'api/accounts/token_auth/',
-            array('username' => $username, 'password' => $password)
+            ['username' => $username, 'password' => $password]
         );
 
-        $this->token = $response->token;
+        $this->token = $response['token'];
 
         return $this;
     }
@@ -44,7 +52,7 @@ class DefaultTransport extends Transport
      */
     public function loadVideoPerson(array $query)
     {
-        return $this->call('GET', 'api/video/person/', array(), $query);
+        return $this->call('GET', 'api/video/person/', [], $query);
     }
 
     /**
@@ -55,7 +63,7 @@ class DefaultTransport extends Transport
      */
     public function loadVideoPersonById($id, array $query)
     {
-        return $this->call('GET', 'api/video/person/' . $id . '/', array(), $query);
+        return $this->call('GET', 'api/video/person/' . $id . '/', [], $query);
     }
 
     /**
@@ -65,7 +73,7 @@ class DefaultTransport extends Transport
      */
     public function loadTags(array $query)
     {
-        return $this->call('GET', 'api/tags/', array(), $query);
+        return $this->call('GET', 'api/tags/', [], $query);
     }
 
     /**
@@ -76,7 +84,7 @@ class DefaultTransport extends Transport
      */
     public function loadVideoTags($id, array $query)
     {
-        return $this->call('GET', 'api/tags/video/' . $id . '/', array(), $query);
+        return $this->call('GET', 'api/tags/video/' . $id . '/', [], $query);
     }
 
     /**
@@ -86,7 +94,7 @@ class DefaultTransport extends Transport
      */
     public function loadMetainfoTv(array $query)
     {
-        return $this->call('GET', 'api/metainfo/tv/', array(), $query);
+        return $this->call('GET', 'api/metainfo/tv/', [], $query);
     }
 
     /**
@@ -118,7 +126,7 @@ class DefaultTransport extends Transport
      */
     public function loadMetainfoTvVideos($id, array $query)
     {
-        return $this->call('GET', 'api/metainfo/tv/' . $id . '/video/', array(), $query);
+        return $this->call('GET', 'api/metainfo/tv/' . $id . '/video/', [], $query);
     }
 
     /**
@@ -129,34 +137,121 @@ class DefaultTransport extends Transport
      */
     public function loadMetainfoTvLastEpisode($id, $query)
     {
-        return $this->call('GET', 'api/metainfo/tv/' . $id . '/last_episode/', array(), $query);
+        return $this->call('GET', 'api/metainfo/tv/' . $id . '/last_episode/', [], $query);
     }
 
     /**
-     * @param string $id
+     * @param string $video_id
+     *
      * @return mixed
+     *
+     * @throws \Rutube\Exceptions\BadRequestException
      * @throws \Rutube\Exceptions\ConnectionErrorException
+     * @throws \Rutube\Exceptions\ForbiddenException
+     * @throws \Rutube\Exceptions\MethodNotAllowedException
+     * @throws \Rutube\Exceptions\NotFoundException
+     * @throws \Rutube\Exceptions\ServerErrorException
+     * @throws \Rutube\Exceptions\UnauthorizedException
      */
-    public function loadMetainfoContenttvs($id)
+    public function loadMetainfoContenttvs($video_id)
     {
-        return $this->call('GET', 'api/metainfo/contenttvs/' . $id . '/');
+        return $this->call('GET', 'api/metainfo/contenttvs/' . $video_id . '/');
+    }
+
+
+    /**
+     * Добавление связи видео с телешоу
+     *
+     * @param $relation
+     *
+     * @return mixed
+     *
+     * @throws \Rutube\Exceptions\BadRequestException
+     * @throws \Rutube\Exceptions\ConnectionErrorException
+     * @throws \Rutube\Exceptions\ForbiddenException
+     * @throws \Rutube\Exceptions\MethodNotAllowedException
+     * @throws \Rutube\Exceptions\NotFoundException
+     * @throws \Rutube\Exceptions\ServerErrorException
+     * @throws \Rutube\Exceptions\UnauthorizedException
+     */
+    public function postMetainfoContenttvs($relation)
+    {
+        return $this->call('POST', 'api/metainfo/contenttvs/', $relation);
+    }
+
+    /**
+     * Изменение связи видео с телешоу
+     *
+     * @param string $video_id
+     * @param mixed $relation
+     *
+     * @return mixed
+     *
+     * @throws \Rutube\Exceptions\BadRequestException
+     * @throws \Rutube\Exceptions\ConnectionErrorException
+     * @throws \Rutube\Exceptions\ForbiddenException
+     * @throws \Rutube\Exceptions\MethodNotAllowedException
+     * @throws \Rutube\Exceptions\NotFoundException
+     * @throws \Rutube\Exceptions\ServerErrorException
+     * @throws \Rutube\Exceptions\UnauthorizedException
+     */
+    public function putMetainfoContenttvs($video_id, $relation)
+    {
+        return $this->call('PUT', "api/metainfo/contenttvs/{$video_id}/", $relation);
+    }
+
+    /**
+     * Изменение связи видео с телешоу
+     *
+     * @param string $video_id
+     * @param mixed $relation
+     *
+     * @return mixed
+     *
+     * @throws \Rutube\Exceptions\BadRequestException
+     * @throws \Rutube\Exceptions\ConnectionErrorException
+     * @throws \Rutube\Exceptions\ForbiddenException
+     * @throws \Rutube\Exceptions\MethodNotAllowedException
+     * @throws \Rutube\Exceptions\NotFoundException
+     * @throws \Rutube\Exceptions\ServerErrorException
+     * @throws \Rutube\Exceptions\UnauthorizedException
+     */
+    public function patchMetainfoContenttvs($video_id, $relation)
+    {
+        return $this->call('PATCH', "api/metainfo/contenttvs/{$video_id}/", $relation);
     }
 
     /**
      * @param string $id
      * @param array $query
+     *
      * @return mixed
+     *
+     * @throws \Rutube\Exceptions\BadRequestException
      * @throws \Rutube\Exceptions\ConnectionErrorException
+     * @throws \Rutube\Exceptions\ForbiddenException
+     * @throws \Rutube\Exceptions\MethodNotAllowedException
+     * @throws \Rutube\Exceptions\NotFoundException
+     * @throws \Rutube\Exceptions\ServerErrorException
+     * @throws \Rutube\Exceptions\UnauthorizedException
      */
     public function getVideoPlayOptions($id, array $query)
     {
-        return $this->call('GET', 'api/play/options/' . $id . '/', array(), $query);
+        return $this->call('GET', 'api/play/options/' . $id . '/', [], $query);
     }
 
     /**
      * @param array $params
+     *
      * @return mixed
+     *
+     * @throws \Rutube\Exceptions\BadRequestException
      * @throws \Rutube\Exceptions\ConnectionErrorException
+     * @throws \Rutube\Exceptions\ForbiddenException
+     * @throws \Rutube\Exceptions\MethodNotAllowedException
+     * @throws \Rutube\Exceptions\NotFoundException
+     * @throws \Rutube\Exceptions\ServerErrorException
+     * @throws \Rutube\Exceptions\UnauthorizedException
      */
     public function uploadVideo(array $params)
     {
@@ -164,65 +259,220 @@ class DefaultTransport extends Transport
     }
 
     /**
-     * @param string $id
+     * @param string $video_id
+     *
      * @return bool
+     *
+     * @throws \Rutube\Exceptions\BadRequestException
      * @throws \Rutube\Exceptions\ConnectionErrorException
+     * @throws \Rutube\Exceptions\ForbiddenException
+     * @throws \Rutube\Exceptions\MethodNotAllowedException
+     * @throws \Rutube\Exceptions\NotFoundException
+     * @throws \Rutube\Exceptions\ServerErrorException
+     * @throws \Rutube\Exceptions\UnauthorizedException
      */
-    public function deleteVideo($id)
+    public function deleteVideo($video_id)
     {
-        return $this->call('DELETE', 'api/video/' . $id, array(), array(), array(), true) == 204;
+        return $this->call('DELETE', 'api/video/' . $video_id, [], [], [], true) == 204;
     }
 
     /**
-     * @param string $id
+     * @param string $video_id
      * @param array $params
+     *
      * @return mixed
+     *
+     * @throws \Rutube\Exceptions\BadRequestException
      * @throws \Rutube\Exceptions\ConnectionErrorException
+     * @throws \Rutube\Exceptions\ForbiddenException
+     * @throws \Rutube\Exceptions\MethodNotAllowedException
+     * @throws \Rutube\Exceptions\NotFoundException
+     * @throws \Rutube\Exceptions\ServerErrorException
+     * @throws \Rutube\Exceptions\UnauthorizedException
      */
-    public function putVideo($id, $params)
+    public function putVideo($video_id, array $params)
     {
-        return $this->call('PUT', 'api/video/' . $id . '/', $params);
+        return $this->call('PUT', 'api/video/' . $video_id . '/', $params);
     }
 
     /**
-     * @param string $id
+     * @param string $video_id
+     *
      * @return mixed
+     *
+     * @throws \Rutube\Exceptions\BadRequestException
      * @throws \Rutube\Exceptions\ConnectionErrorException
+     * @throws \Rutube\Exceptions\ForbiddenException
+     * @throws \Rutube\Exceptions\MethodNotAllowedException
+     * @throws \Rutube\Exceptions\NotFoundException
+     * @throws \Rutube\Exceptions\ServerErrorException
+     * @throws \Rutube\Exceptions\UnauthorizedException
      */
-    public function getVideo($id)
+    public function getVideo($video_id)
     {
-        return $this->call('GET', 'api/video/' . $id . '/');
+        return $this->call('GET', 'api/video/' . $video_id . '/');
     }
 
     /**
-     * @param string $id
+     * @param string $video_id
      * @param array $params
+     *
      * @return mixed
+     *
+     * @throws \Rutube\Exceptions\BadRequestException
      * @throws \Rutube\Exceptions\ConnectionErrorException
+     * @throws \Rutube\Exceptions\ForbiddenException
+     * @throws \Rutube\Exceptions\MethodNotAllowedException
+     * @throws \Rutube\Exceptions\NotFoundException
+     * @throws \Rutube\Exceptions\ServerErrorException
+     * @throws \Rutube\Exceptions\UnauthorizedException
      */
-    public function patchVideo($id, $params)
+    public function patchVideo($video_id, array $params)
     {
-        return $this->call('PATCH', 'api/video/' . $id, $params);
+        return $this->call('PATCH', 'api/video/' . $video_id, $params);
     }
 
     /**
-     * @param string $id
+     * @param string $video_id
      * @param array $file
+     *
      * @return mixed
+     *
+     * @throws \Rutube\Exceptions\BadRequestException
      * @throws \Rutube\Exceptions\ConnectionErrorException
+     * @throws \Rutube\Exceptions\ForbiddenException
+     * @throws \Rutube\Exceptions\MethodNotAllowedException
+     * @throws \Rutube\Exceptions\NotFoundException
+     * @throws \Rutube\Exceptions\ServerErrorException
+     * @throws \Rutube\Exceptions\UnauthorizedException
      */
-    public function addThumb($id, array $file)
+    public function addThumb($video_id, array $file)
     {
-        return $this->call('POST', 'api/video/' . $id . '/thumbnail/', array(), array(), $file);
+        return $this->call('POST', 'api/video/' . $video_id . '/thumbnail/', [], [], $file);
     }
 
     /**
-     * @param array $params
+     * Получение информации об отложенной публикации
+     *
+     * @param string $video_id
+     *
      * @return mixed
+     *
+     * @throws \Rutube\Exceptions\BadRequestException
      * @throws \Rutube\Exceptions\ConnectionErrorException
+     * @throws \Rutube\Exceptions\ForbiddenException
+     * @throws \Rutube\Exceptions\MethodNotAllowedException
+     * @throws \Rutube\Exceptions\NotFoundException
+     * @throws \Rutube\Exceptions\ServerErrorException
+     * @throws \Rutube\Exceptions\UnauthorizedException
      */
-    public function publication($params)
+    public function getPublication($video_id)
+    {
+        return $this->call('GET', "api/video/publication/{$video_id}/");
+    }
+
+    /**
+     * Создание отложенной публикации
+     *
+     * @param array $params
+     *
+     * @return mixed
+     *
+     * @throws \Rutube\Exceptions\BadRequestException
+     * @throws \Rutube\Exceptions\ConnectionErrorException
+     * @throws \Rutube\Exceptions\ForbiddenException
+     * @throws \Rutube\Exceptions\MethodNotAllowedException
+     * @throws \Rutube\Exceptions\NotFoundException
+     * @throws \Rutube\Exceptions\ServerErrorException
+     * @throws \Rutube\Exceptions\UnauthorizedException
+     */
+    public function addPublication(array $params)
     {
         return $this->call('POST', 'api/video/publication/', $params);
+    }
+
+    /**
+     * Изменение информации об отложенной публикации
+     *
+     * @param array $params
+     *
+     * @return mixed
+     *
+     * @throws \Rutube\Exceptions\BadRequestException
+     * @throws \Rutube\Exceptions\ConnectionErrorException
+     * @throws \Rutube\Exceptions\ForbiddenException
+     * @throws \Rutube\Exceptions\MethodNotAllowedException
+     * @throws \Rutube\Exceptions\NotFoundException
+     * @throws \Rutube\Exceptions\ServerErrorException
+     * @throws \Rutube\Exceptions\UnauthorizedException
+     */
+    public function putPublication(array $params)
+    {
+        return $this->call('PUT', "api/video/publication/{$params['video']}/", $params);
+    }
+
+    /**
+     * Изменение информации об отложенной публикации
+     *
+     * @param array $params
+     *
+     * @return mixed
+     *
+     * @throws \Rutube\Exceptions\BadRequestException
+     * @throws \Rutube\Exceptions\ConnectionErrorException
+     * @throws \Rutube\Exceptions\ForbiddenException
+     * @throws \Rutube\Exceptions\MethodNotAllowedException
+     * @throws \Rutube\Exceptions\NotFoundException
+     * @throws \Rutube\Exceptions\ServerErrorException
+     * @throws \Rutube\Exceptions\UnauthorizedException
+     */
+    public function patchPublication(array $params)
+    {
+        return $this->call('PATCH', "api/video/publication/{$params['video']}/", $params);
+    }
+
+    /**
+     * Удаление отложенной публикации
+     *
+     * @param string $video_id
+     *
+     * @return mixed
+     *
+     * @throws \Rutube\Exceptions\BadRequestException
+     * @throws \Rutube\Exceptions\ConnectionErrorException
+     * @throws \Rutube\Exceptions\ForbiddenException
+     * @throws \Rutube\Exceptions\MethodNotAllowedException
+     * @throws \Rutube\Exceptions\NotFoundException
+     * @throws \Rutube\Exceptions\ServerErrorException
+     * @throws \Rutube\Exceptions\UnauthorizedException
+     */
+    public function deletePublication($video_id)
+    {
+        return $this->call('DELETE', "api/video/publication/{$video_id}/");
+    }
+
+    /**
+     * Изменение пароля пользователя
+     *
+     * @param int $oldpass Старый пароль
+     * @param int $newpass Новый пароль
+     *
+     * @return mixed
+     *
+     * @throws \Rutube\Exceptions\BadRequestException
+     * @throws \Rutube\Exceptions\ConnectionErrorException
+     * @throws \Rutube\Exceptions\ForbiddenException
+     * @throws \Rutube\Exceptions\MethodNotAllowedException
+     * @throws \Rutube\Exceptions\NotFoundException
+     * @throws \Rutube\Exceptions\ServerErrorException
+     * @throws \Rutube\Exceptions\UnauthorizedException
+     */
+    public function changePassword($oldpass, $newpass)
+    {
+        return $this->call(
+            'PUT',
+            '/api/accounts/edit/password/',
+            ['current_pass' => $oldpass, 'new_pass' => $newpass, 'again_pass' => $newpass]
+        );
     }
 }

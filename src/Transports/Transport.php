@@ -11,6 +11,7 @@
 
 namespace Rutube\Transports;
 
+use Rutube\Clients\ClientInterface;
 use Rutube\Exceptions\Exception;
 
 /**
@@ -40,20 +41,21 @@ class Transport
     /**
      * @var array
      */
-    protected $exceptions = array(
+    protected $exceptions = [
         400 => 'Rutube\Exceptions\BadRequestException',
         401 => 'Rutube\Exceptions\UnauthorizedException',
         403 => 'Rutube\Exceptions\ForbiddenException',
         404 => 'Rutube\Exceptions\NotFoundException',
         405 => 'Rutube\Exceptions\MethodNotAllowedException',
         500 => 'Rutube\Exceptions\ServerErrorException'
-    );
+    ];
 
     /**
      * @param string $transport
      * @param bool $secure
      * @param string $rutube
-     * @throws Exception
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct($transport, $secure, $rutube)
     {
@@ -62,7 +64,7 @@ class Transport
         $trs = $this->transports;
 
         if (!isset($trs[$transport]) || !class_exists($trs[$transport])) {
-            throw new Exception("Unknown " . $transport . " transport");
+            throw new \InvalidArgumentException("Unknown " . $transport . " transport");
         }
 
         $this->client = new $trs[$transport]();
@@ -71,10 +73,10 @@ class Transport
     /**
      * @var array
      */
-    protected $transports = array(
+    protected $transports = [
         'httpful' => '\Rutube\Clients\ClientHttpful',
         'mock' => '\Rutube\Clients\ClientMock',
-    );
+    ];
 
     /**
      * @return string
@@ -95,7 +97,7 @@ class Transport
      * @param array $query
      * @return string
      */
-    protected function getUrl($url, $query = array())
+    protected function getUrl($url, $query = [])
     {
         $url = $this->getProtocol() . $this->rutube . '/' . $url;
 
@@ -131,7 +133,7 @@ class Transport
     }
 
     /**
-     * @return \Httpful\Request
+     * @return ClientInterface
      */
     public function getClient()
     {
@@ -139,20 +141,29 @@ class Transport
     }
 
     /**
+     * @noinspection PhpDocRedundantThrowsInspection
+     *
      * @param string $method Метод: GET, POST, PUT, PATCH, DELETE
      * @param string $url URL метода API, например: api/video/person/
      * @param array $params Параметры зпроса
      * @param array $query Запрос
      * @param array $file Путь к файлу
      * @param bool $return_code Если true - возвращается HTTP-код ответа
+     *
      * @return mixed
      *
      * @throws \Rutube\Exceptions\ConnectionErrorException
+     * @throws \Rutube\Exceptions\BadRequestException
+     * @throws \Rutube\Exceptions\UnauthorizedException
+     * @throws \Rutube\Exceptions\ForbiddenException
+     * @throws \Rutube\Exceptions\NotFoundException
+     * @throws \Rutube\Exceptions\MethodNotAllowedException
+     * @throws \Rutube\Exceptions\ServerErrorException
      */
-    public function call($method, $url, $params = array(), $query = array(), $file = array(), $return_code = false)
+    public function call($method, $url, $params = [], $query = [], $file = [], $return_code = false)
     {
         try {
-            /** @var \Httpful\Request $request */
+            /** @var ClientInterface $request */
             $request = $this->client
                 ->{strtolower($method)}($this->getUrl($url, $query))
                 ->asJson()

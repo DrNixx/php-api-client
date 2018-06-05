@@ -1,16 +1,15 @@
 <?php
-
 /*
  * This file is part of the Rutube PHP API Client package.
  *
- * (c) Rutube
+ * (c) Rutube & Friday
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Rutube;
 
+use InvalidArgumentException;
 use Rutube\Transports\DefaultTransport as Transport;
 
 /**
@@ -42,6 +41,15 @@ class Rutube
      * @param bool $secure Использовать https
      * @param string $host Домен API
      * @param string $transport Транспорт
+     *
+     * @throws InvalidArgumentException
+     * @throws Exceptions\BadRequestException
+     * @throws Exceptions\ConnectionErrorException
+     * @throws Exceptions\ForbiddenException
+     * @throws Exceptions\MethodNotAllowedException
+     * @throws Exceptions\NotFoundException
+     * @throws Exceptions\ServerErrorException
+     * @throws Exceptions\UnauthorizedException
      */
     public function __construct(
         $username = null,
@@ -97,6 +105,16 @@ class Rutube
     public function account()
     {
         return new Account($this->getTransport());
+    }
+
+    /**
+     * Стартовая точка работы с ТВ Шоу
+     *
+     * @return Show
+     */
+    public function show()
+    {
+        return new Show($this->getTransport());
     }
 
     /**

@@ -11,6 +11,9 @@
 
 namespace Rutube\Clients;
 
+use Httpful\Handlers\JsonHandler;
+use Httpful\Httpful;
+use Httpful\Mime;
 use Httpful\Request;
 
 /**
@@ -106,10 +109,10 @@ class ClientHttpful implements ClientInterface
      */
     public function setHeaders($token = null)
     {
-        $headers = array(
+        $headers = [
             'Accept' => 'application/json',
             'User-Agent' => 'Rutube_PHPClient',
-        );
+        ];
 
         if ($token !== null) {
             $headers['Authorization'] = 'Token ' . $token;
@@ -157,6 +160,7 @@ class ClientHttpful implements ClientInterface
      */
     public function asJson()
     {
+        Httpful::register(Mime::JSON, new JsonHandler(['decode_as_array' => true]));
         $this->request->sendsJson();
 
         return $this;
